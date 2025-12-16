@@ -3,400 +3,425 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lệnh Công Tác - Phụ Lục B</title>
+    <title>Quản Lý Lệnh Công Tác (Phụ Lục B)</title>
     <style>
-        body { font-family: 'Times New Roman', Times, serif; background-color: #f0f2f5; padding: 20px; }
-        .container { max-width: 950px; margin: 0 auto; background: #fff; padding: 40px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        /* CSS: Định dạng giao diện giống văn bản in ấn */
+        body { font-family: 'Times New Roman', Times, serif; background-color: #f4f4f4; padding: 20px; font-size: 14px; }
+        .container { max-width: 900px; margin: 0 auto; background: #fff; padding: 40px; box-shadow: 0 0 15px rgba(0,0,0,0.1); border: 1px solid #ddd; }
         
         /* Tiêu đề */
-        h1, h2, h3 { text-align: center; margin: 10px 0; text-transform: uppercase; }
-        h1 { font-size: 16pt; font-weight: bold; }
-        h3 { font-size: 13pt; background: #e9ecef; padding: 5px; border-radius: 4px; text-align: left; }
-
-        /* Các trường nhập liệu */
-        .form-group { margin-bottom: 15px; }
-        label { font-weight: bold; display: block; margin-bottom: 5px; color: #333; }
-        .inline-label { display: inline; font-weight: normal; margin-right: 5px; }
+        h1, h2, h3 { text-align: center; font-weight: bold; text-transform: uppercase; margin: 10px 0; }
+        h1 { font-size: 18pt; }
+        h3 { font-size: 14pt; margin-top: 30px; background: #eee; padding: 5px; text-align: left; border-left: 5px solid #333; }
         
+        /* Layout hàng và cột */
+        .row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+        .col { flex: 1; }
+        
+        /* Các ô nhập liệu */
+        label { font-weight: bold; margin-right: 5px; display: inline-block; }
         input[type="text"], input[type="number"], input[type="datetime-local"], textarea {
-            width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px;
-            box-sizing: border-box; font-family: inherit; font-size: 14px;
+            border: 1px solid #ccc; padding: 5px; border-radius: 3px; width: 100%; box-sizing: border-box; font-family: inherit;
         }
-        textarea { height: 60px; resize: vertical; }
+        /* Input kiểu dòng kẻ (cho giống văn bản) */
+        .input-line { border: none; border-bottom: 1px dotted #000; background: transparent; padding: 2px; font-weight: bold; color: #000; }
+        .input-line:focus { outline: none; border-bottom: 2px solid #007bff; }
         
-        /* Input nhỏ cho ngày tháng, bậc an toàn */
-        .input-mini { width: 60px !important; display: inline-block !important; text-align: center; }
-        .input-small { width: 150px !important; display: inline-block !important; }
+        textarea { height: 60px; resize: vertical; border: 1px solid #bbb; width: 100%; display: block; margin-top: 5px; }
 
         /* Bảng biểu */
-        table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 13px; }
-        th, td { border: 1px solid #000; padding: 5px; text-align: center; vertical-align: middle; }
-        th { background-color: #f8f9fa; font-weight: bold; }
+        table { width: 100%; border-collapse: collapse; margin-top: 15px; margin-bottom: 15px; }
+        th, td { border: 1px solid #000; padding: 8px; text-align: center; vertical-align: middle; }
+        th { background-color: #f0f0f0; font-weight: bold; }
         
-        /* Chữ ký */
-        .signature-section { display: flex; justify-content: space-between; margin-top: 30px; }
-        .signature-box { width: 45%; text-align: center; }
-        .signature-box p { font-style: italic; margin-top: 5px; }
-        .signature-input { border: none; border-bottom: 1px dashed #000; text-align: center; margin-top: 40px; background: transparent; }
-
-        /* Thanh công cụ cố định phía dưới */
+        /* Phần chữ ký */
+        .signature-section { display: flex; justify-content: space-around; margin-top: 40px; text-align: center; }
+        .signature-box { width: 40%; }
+        .signature-box p { margin: 5px 0; font-style: italic; }
+        
+        /* Thanh công cụ (Nút bấm) */
         .toolbar {
-            position: fixed; bottom: 0; left: 0; right: 0;
-            background: #343a40; padding: 15px; text-align: center;
-            box-shadow: 0 -2px 10px rgba(0,0,0,0.2); z-index: 1000;
+            position: fixed; bottom: 20px; right: 20px; 
+            background: rgba(0, 0, 0, 0.8); padding: 15px; border-radius: 8px;
+            display: flex; gap: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.3); z-index: 1000;
         }
         button {
-            padding: 10px 20px; margin: 0 10px; cursor: pointer;
-            border: none; border-radius: 4px; font-weight: bold; color: white;
+            padding: 10px 20px; cursor: pointer; border: none; border-radius: 4px; 
+            font-weight: bold; color: white; transition: 0.3s;
         }
-        .btn-save { background: #28a745; }
-        .btn-load { background: #007bff; }
-        .btn-new { background: #6c757d; }
-        button:hover { opacity: 0.9; }
+        .btn-save { background-color: #28a745; }
+        .btn-save:hover { background-color: #218838; }
+        .btn-load { background-color: #007bff; }
+        .btn-load:hover { background-color: #0069d9; }
         
-        #searchKey { width: 200px; padding: 10px; border-radius: 4px; border: none; }
+        /* Trạng thái */
+        #statusMsg { color: white; margin-right: 10px; align-self: center; font-style: italic; }
+        
+        @media print {
+            .toolbar { display: none; }
+            body { background: white; padding: 0; }
+            .container { box-shadow: none; border: none; padding: 0; }
+        }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <div class="form-group">
-        <label>TÊN ĐƠN VỊ CẤP LỆNH:</label>
-        <input type="text" id="unitName" placeholder="Nhập tên đơn vị...">
+    <div class="row">
+        <div style="width: 40%;">
+            TÊN ĐƠN VỊ CẤP LỆNH:<br>
+            <input type="text" id="donViCapLenh" class="input-line" placeholder="...">
+        </div>
+        <div style="width: 60%; text-align: center;">
+            <h2>LỆNH CÔNG TÁC</h2>
+            Số: <input type="text" id="soLenh" class="input-line" style="width: 100px; text-align: center;" placeholder="Nhập số lệnh">
+        </div>
     </div>
+
+    <h3>A. PHẦN LƯU GIỮ CỦA NGƯỜI RA LỆNH [cite: 2]</h3>
     
-    <h1>LỆNH CÔNG TÁC</h1>
-    <div style="text-align: center;">
-        Số: <input type="text" id="orderNumber" class="input-small" placeholder="Số lệnh...">
+    <div>
+        <label>1. Người chỉ huy trực tiếp:</label> 
+        <input type="text" id="nguoiChiHuyA" class="input-line" style="width: 50%;"> 
+        <label>Bậc ATĐ:</label> <input type="number" id="bacAtA" class="input-line" style="width: 50px;">/5
     </div>
 
-    <h3>A. PHẦN LƯU GIỮ CỦA NGƯỜI RA LỆNH</h3>
-    
-    <div class="form-group">
-        <label>1. Người chỉ huy trực tiếp:</label>
-        <input type="text" id="commanderA" style="width: 60%; display: inline-block;">
-        <span class="inline-label">Bậc ATĐ:</span>
-        <input type="number" id="safetyLevelA" class="input-mini">/5
+    <div style="margin-top: 10px;">
+        <label>2. Nhân viên đơn vị công tác gồm:</label> 
+        <input type="number" id="soLuongNguoiA" class="input-line" style="width: 50px;"> người. 
+        <label>Thuộc:</label> <input type="text" id="donViCongTacA" class="input-line" style="width: 40%;">
     </div>
 
-    <div class="form-group">
-        <label>2. Nhân viên đơn vị công tác:</label>
-        Số lượng: <input type="number" id="staffCountA" class="input-mini"> người.
-        Thuộc: <input type="text" id="staffUnitA" class="input-small" style="width: 300px !important;">
-        
-        <table id="tableStaffA">
-            <thead>
-                <tr>
-                    <th style="width: 50px;">TT</th>
-                    <th>Họ và tên</th>
-                    <th style="width: 100px;">Bậc ATĐ</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>1</td>
-                    <td><input type="text" class="staff-name"></td>
-                    <td><input type="number" class="staff-safety input-mini">/5</td>
-                </tr>
-                <tr>
-                    <td>2</td>
-                    <td><input type="text" class="staff-name"></td>
-                    <td><input type="number" class="staff-safety input-mini">/5</td>
-                </tr>
-                <tr>
-                    <td>3</td>
-                    <td><input type="text" class="staff-name"></td>
-                    <td><input type="number" class="staff-safety input-mini">/5</td>
-                </tr>
-            </tbody>
-        </table>
-    </div>
+    <p><b>Danh sách nhân viên:</b></p>
+    <table id="tableNhanVienA">
+        <thead>
+            <tr>
+                <th width="10%">TT</th>
+                <th>Họ và tên</th>
+                <th width="20%">Bậc ATĐ</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr><td>1</td><td><input type="text" class="staff-name"></td><td><input type="number" class="staff-safety"></td></tr>
+            <tr><td>2</td><td><input type="text" class="staff-name"></td><td><input type="number" class="staff-safety"></td></tr>
+            <tr><td>3</td><td><input type="text" class="staff-name"></td><td><input type="number" class="staff-safety"></td></tr>
+        </tbody>
+    </table>
 
-    <div class="form-group">
-        <label>3. Địa điểm công tác:</label>
-        <textarea id="locationA"></textarea>
+    <div>
+        <label>3. Địa điểm/Thiết bị công tác:</label> 
+        <textarea id="diaDiemA" placeholder="Nhập địa điểm..."></textarea>
     </div>
-    <div class="form-group">
-        <label>4. Nội dung công tác:</label>
-        <textarea id="contentA"></textarea>
+    <div>
+        <label>4. Nội dung công tác:</label> 
+        <textarea id="noiDungA" placeholder="Nhập nội dung..."></textarea>
     </div>
-    <div class="form-group">
-        <label>5. Điều kiện an toàn:</label>
-        <textarea id="safetyCondA"></textarea>
+    <div>
+        <label>5. Điều kiện an toàn điện:</label> 
+        <textarea id="dieuKienA" placeholder="Cắt điện, tiếp địa..."></textarea>
     </div>
-    <div class="form-group">
-        <label>6. Thời gian bắt đầu (Kế hoạch):</label>
-        <input type="datetime-local" id="startTimeA">
+    <div style="margin-top: 10px;">
+        <label>6. Thời gian bắt đầu (Dự kiến):</label> 
+        <input type="datetime-local" id="thoiGianBatDauA" style="width: auto;">
     </div>
 
     <div class="signature-section">
         <div class="signature-box" style="margin-left: auto;">
-            <label>Người ra lệnh công tác</label>
-            <p>(Ký, ghi họ tên)</p>
-            <input type="text" id="signerA" class="signature-input" placeholder="Nhập tên...">
+            <b>Người ra lệnh công tác</b><br>
+            <i>(Ký, ghi họ tên)</i><br><br><br>
+            <input type="text" id="kyNguoiRaLenhA" class="input-line" style="text-align: center;" placeholder="Họ tên người ký">
         </div>
     </div>
 
-    <hr style="border-top: 2px dashed #999; margin: 30px 0;">
+    <hr style="margin: 40px 0; border-top: 2px dashed #999;">
 
-    <h3>B. PHẦN GIAO CHO NGƯỜI CHỈ HUY TRỰC TIẾP</h3>
+    <h3>B. PHẦN GIAO CHO NGƯỜI CHỈ HUY TRỰC TIẾP [cite: 4]</h3>
+    
+    <p><i>(Các mục 1.1, 1.2, 1.3, 1.4, 1.5 có thể tự động lấy từ Phần A nếu cần)</i></p>
 
-    <div class="form-group">
-        <label>1. Nội dung lệnh (Phần B):</label>
-        <p>1.1. Người chỉ huy trực tiếp: <span id="displayCommanderB" style="font-weight: bold;">(Như trên)</span></p>
-        
-        <label>1.2. Danh sách nhân viên & Biến động:</label>
-        <table id="tableStaffB">
-            <thead>
-                <tr>
-                    <th rowspan="2">TT</th>
-                    <th rowspan="2">Họ tên</th>
-                    <th rowspan="2">Bậc ATĐ</th>
-                    <th colspan="2">Đến làm việc</th>
-                    <th colspan="2">Rút khỏi</th>
-                </tr>
-                <tr>
-                    <th>Thời gian</th>
-                    <th>Ký tên</th>
-                    <th>Thời gian</th>
-                    <th>Ký tên</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>1</td>
-                    <td><input type="text"></td>
-                    <td><input type="text" class="input-mini"></td>
-                    <td><input type="text" placeholder="Giờ, ngày"></td>
-                    <td><input type="text" class="input-mini"></td>
-                    <td><input type="text" placeholder="Giờ, ngày"></td>
-                    <td><input type="text" class="input-mini"></td>
-                </tr>
-                 <tr>
-                    <td>2</td>
-                    <td><input type="text"></td>
-                    <td><input type="text" class="input-mini"></td>
-                    <td><input type="text" placeholder="Giờ, ngày"></td>
-                    <td><input type="text" class="input-mini"></td>
-                    <td><input type="text" placeholder="Giờ, ngày"></td>
-                    <td><input type="text" class="input-mini"></td>
-                </tr>
-            </tbody>
-        </table>
-        
-        <div style="margin-top: 10px;">
-            <label>1.6. Thời gian bắt đầu (Thực tế):</label>
-            <input type="datetime-local" id="startTimeB">
-        </div>
+    <p><b>Danh sách nhân viên và thay đổi người (nếu có)[cite: 5]:</b></p>
+    <table id="tableNhanVienB">
+        <thead>
+            <tr>
+                <th rowspan="2">TT</th>
+                <th rowspan="2">Họ tên</th>
+                <th rowspan="2">Bậc ATĐ</th>
+                <th colspan="2">Đến làm việc</th>
+                <th colspan="2">Rút khỏi</th>
+            </tr>
+            <tr>
+                <th>Thời gian</th>
+                <th>Ký tên</th>
+                <th>Thời gian</th>
+                <th>Ký tên</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>1</td>
+                <td><input type="text" class="b-name"></td>
+                <td><input type="number" class="b-safety"></td>
+                <td><input type="text" class="b-arr-time" placeholder="Giờ, ngày"></td>
+                <td><input type="text" class="b-arr-sign"></td>
+                <td><input type="text" class="b-dep-time" placeholder="Giờ, ngày"></td>
+                <td><input type="text" class="b-dep-sign"></td>
+            </tr>
+             <tr>
+                <td>2</td>
+                <td><input type="text" class="b-name"></td>
+                <td><input type="number" class="b-safety"></td>
+                <td><input type="text" class="b-arr-time" placeholder="Giờ, ngày"></td>
+                <td><input type="text" class="b-arr-sign"></td>
+                <td><input type="text" class="b-dep-time" placeholder="Giờ, ngày"></td>
+                <td><input type="text" class="b-dep-sign"></td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div style="margin-top: 15px;">
+        <label>1.6. Thời gian bắt đầu làm việc (Thực tế):</label> 
+        <input type="datetime-local" id="thoiGianBatDauB" style="width: auto;">
     </div>
 
-    <div class="form-group">
-        <label>2. Thực hiện lệnh:</label>
-        <div>
-            <span class="inline-label">2.2. Người giám sát an toàn (nếu có):</span>
-            <input type="text" id="supervisor" class="input-small" style="width: 200px !important;">
-            <span class="inline-label">Đơn vị:</span>
-            <input type="text" id="supervisorUnit" class="input-small">
-        </div>
-        
-        <label style="margin-top: 10px;">2.3. Trình tự công việc & Điều kiện an toàn:</label>
-        <table id="tableSequence">
-            <thead>
-                <tr>
-                    <th>TT</th>
-                    <th>Trình tự công việc</th>
-                    <th>Điều kiện an toàn</th>
-                    <th>Bắt đầu</th>
-                    <th>Kết thúc</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>1</td>
-                    <td><input type="text" class="seq-work"></td>
-                    <td><input type="text" class="seq-safe"></td>
-                    <td><input type="text" class="input-mini" placeholder="Giờ"></td>
-                    <td><input type="text" class="input-mini" placeholder="Giờ"></td>
-                </tr>
-                <tr>
-                    <td>2</td>
-                    <td><input type="text" class="seq-work"></td>
-                    <td><input type="text" class="seq-safe"></td>
-                    <td><input type="text" class="input-mini" placeholder="Giờ"></td>
-                    <td><input type="text" class="input-mini" placeholder="Giờ"></td>
-                </tr>
-            </tbody>
-        </table>
+    <h4 style="margin-top: 20px;">2. Thực hiện lệnh [cite: 8]</h4>
+    <div>
+        <label>2.2. Người giám sát an toàn (nếu có):</label> 
+        <input type="text" id="nguoiGiamSat" class="input-line" style="width: 40%;">
     </div>
+    
+    <p><b>2.3. Trình tự công việc và điều kiện an toàn[cite: 11]:</b></p>
+    <table id="tableTrinhTu">
+        <thead>
+            <tr>
+                <th width="5%">TT</th>
+                <th>Trình tự công việc</th>
+                <th>Các điều kiện an toàn</th>
+                <th>TG Bắt đầu</th>
+                <th>TG Kết thúc</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>1</td>
+                <td><input type="text" class="seq-work"></td>
+                <td><input type="text" class="seq-safe"></td>
+                <td><input type="text" class="seq-start" placeholder="Giờ:Phút"></td>
+                <td><input type="text" class="seq-end" placeholder="Giờ:Phút"></td>
+            </tr>
+            <tr>
+                <td>2</td>
+                <td><input type="text" class="seq-work"></td>
+                <td><input type="text" class="seq-safe"></td>
+                <td><input type="text" class="seq-start" placeholder="Giờ:Phút"></td>
+                <td><input type="text" class="seq-end" placeholder="Giờ:Phút"></td>
+            </tr>
+        </tbody>
+    </table>
 
-    <div class="form-group">
-        <label>3. Kết thúc công tác:</label>
-        <div>
-            Làm xong công việc lúc: <input type="datetime-local" id="endTime" style="width: auto;">
-        </div>
-        <div style="margin-top: 10px;">
-            Đã báo cho ông/bà: <input type="text" id="reportedPerson" class="input-small">
-            Chức danh: <input type="text" id="reportedTitle" class="input-small">
-        </div>
+    <h4 style="margin-top: 20px;">3. Kết thúc công tác [cite: 12]</h4>
+    <div>
+        <label>Đơn vị làm xong công việc lúc:</label> 
+        <input type="datetime-local" id="thoiGianKetThuc" style="width: auto;">
+    </div>
+    <div style="margin-top: 5px;">
+        <label>Đã báo cho ông (bà):</label> 
+        <input type="text" id="baoCaoCho" class="input-line" style="width: 30%;">
+        <label>Chức danh:</label> 
+        <input type="text" id="chucDanhBaoCao" class="input-line" style="width: 20%;">
     </div>
 
     <div class="signature-section">
         <div class="signature-box">
-            <label>Người chỉ huy trực tiếp</label>
-            <p>(Ký, ghi họ tên)</p>
-            <input type="text" id="signerCommanderEnd" class="signature-input">
+            <b>Người chỉ huy trực tiếp</b><br>
+            <i>(Ký, ghi họ tên)</i><br><br><br>
+            <input type="text" id="kyNguoiChiHuyCuoi" class="input-line">
         </div>
         <div class="signature-box">
-            <label>Người ra lệnh công tác</label>
-            <p>(Đã kiểm tra, ký tên)</p>
-            <input type="text" id="signerOrderEnd" class="signature-input">
+            <b>Người ra lệnh công tác</b><br>
+            <i>(Đã kiểm tra, ký tên)</i><br><br><br>
+            <input type="text" id="kyNguoiRaLenhCuoi" class="input-line">
         </div>
     </div>
+
 </div>
 
-<div style="height: 80px;"></div> <div class="toolbar">
-    <input type="text" id="searchKey" placeholder="Nhập Số Lệnh để tìm kiếm...">
-    <button class="btn-load" onclick="loadData()">📂 Tìm Kiếm</button>
-    <button class="btn-save" onclick="saveData()">💾 Lưu Lại</button>
-    <button class="btn-new" onclick="resetForm()">📝 Tạo Mới</button>
+<div class="toolbar">
+    <span id="statusMsg">Sẵn sàng</span>
+    <button class="btn-load" onclick="loadData()">📂 Tìm & Xem lại</button>
+    <button class="btn-save" onclick="saveData()">💾 Lưu Lệnh</button>
 </div>
 
 <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
 
 <script>
-    // ============================================================
-    // CẤU HÌNH FIREBASE - THAY THẾ PHẦN NÀY
-    // ============================================================
-const firebaseConfig = {
-  apiKey: "AIzaSyBma2XkXfjWW4RkLCLSvK43c4bE5a6-clI",
-  authDomain: "test1-9af7b.firebaseapp.com",
-  projectId: "test1-9af7b",
-  storageBucket: "test1-9af7b.firebasestorage.app",
-  messagingSenderId: "394181075902",
-  appId: "1:394181075902:web:90c052212c7b9f111b4fef"
-};
-    // ============================================================
+    // --- 1. CẤU HÌNH FIREBASE (BẠN PHẢI THAY THẾ PHẦN NÀY) ---
+    const firebaseConfig = {
+        apiKey: "THAY_API_KEY_CUA_BAN_VAO_DAY",
+        authDomain: "ten-du-an.firebaseapp.com",
+        databaseURL: "https://ten-du-an-default-rtdb.firebaseio.com",
+        projectId: "ten-du-an",
+        storageBucket: "ten-du-an.appspot.com",
+        messagingSenderId: "123456789",
+        appId: "1:123456789:web:abcdef"
+    };
 
     // Khởi tạo Firebase
     let db;
     try {
         firebase.initializeApp(firebaseConfig);
         db = firebase.database();
-        console.log("Firebase connected");
+        console.log("Đã kết nối Firebase");
     } catch (e) {
-        console.error("Firebase Init Error:", e);
-        alert("Lỗi cấu hình Firebase! Vui lòng kiểm tra console.");
+        console.error("Lỗi Firebase:", e);
+        document.getElementById('statusMsg').innerText = "Lỗi Cấu hình Firebase!";
     }
 
-    // --- HÀM LƯU DỮ LIỆU ---
+    // --- 2. HÀM LƯU DỮ LIỆU ---
     function saveData() {
-        const orderNum = document.getElementById('orderNumber').value.trim();
-        if (!orderNum) { alert("Vui lòng nhập Số Lệnh!"); return; }
+        const soLenh = document.getElementById('soLenh').value.trim();
+        if (!soLenh) {
+            alert("Vui lòng nhập SỐ LỆNH để làm khóa lưu trữ!");
+            return;
+        }
 
-        // Thu thập dữ liệu nhân viên (Phần A)
-        const staffListA = [];
-        const rowsA = document.querySelectorAll('#tableStaffA tbody tr');
-        rowsA.forEach(row => {
-            const inputs = row.querySelectorAll('input');
-            if(inputs[0].value) { // Chỉ lấy dòng có tên
-                staffListA.push({ name: inputs[0].value, safety: inputs[1].value });
-            }
-        });
+        document.getElementById('statusMsg').innerText = "Đang lưu...";
 
-        // Object dữ liệu tổng hợp
+        // Thu thập dữ liệu từ các trường (Đây chỉ là ví dụ các trường chính)
         const data = {
-            meta: {
-                unit: document.getElementById('unitName').value,
-                id: orderNum,
-                created: new Date().toISOString()
+            donViCapLenh: document.getElementById('donViCapLenh').value,
+            phanA: {
+                nguoiChiHuy: document.getElementById('nguoiChiHuyA').value,
+                bacAt: document.getElementById('bacAtA').value,
+                soLuong: document.getElementById('soLuongNguoiA').value,
+                donVi: document.getElementById('donViCongTacA').value,
+                diaDiem: document.getElementById('diaDiemA').value,
+                noiDung: document.getElementById('noiDungA').value,
+                dieuKien: document.getElementById('dieuKienA').value,
+                thoiGianBatDau: document.getElementById('thoiGianBatDauA').value,
+                nguoiKy: document.getElementById('kyNguoiRaLenhA').value,
+                // Thu thập bảng nhân viên A (ví dụ dòng 1)
+                nhanVien: Array.from(document.querySelectorAll('#tableNhanVienA tbody tr')).map(row => ({
+                    ten: row.querySelector('.staff-name').value,
+                    bac: row.querySelector('.staff-safety').value
+                }))
             },
-            sectionA: {
-                commander: document.getElementById('commanderA').value,
-                safetyLevel: document.getElementById('safetyLevelA').value,
-                staffCount: document.getElementById('staffCountA').value,
-                staffUnit: document.getElementById('staffUnitA').value,
-                location: document.getElementById('locationA').value,
-                content: document.getElementById('contentA').value,
-                safetyCond: document.getElementById('safetyCondA').value,
-                startTime: document.getElementById('startTimeA').value,
-                staffList: staffListA,
-                signer: document.getElementById('signerA').value
+            phanB: {
+                thoiGianThucTe: document.getElementById('thoiGianBatDauB').value,
+                // Thu thập bảng B (Rút gọn cho ví dụ)
+                nhanVienChiTiet: Array.from(document.querySelectorAll('#tableNhanVienB tbody tr')).map(row => ({
+                    ten: row.querySelector('.b-name').value,
+                    bac: row.querySelector('.b-safety').value,
+                    den: row.querySelector('.b-arr-time').value,
+                    di: row.querySelector('.b-dep-time').value
+                }))
             },
-            sectionB: {
-                // Có thể mở rộng để lưu chi tiết bảng B nếu cần
-                startTimeReal: document.getElementById('startTimeB').value,
-                supervisor: document.getElementById('supervisor').value,
-                supervisorUnit: document.getElementById('supervisorUnit').value,
-                endTime: document.getElementById('endTime').value,
-                reportedPerson: document.getElementById('reportedPerson').value,
-                signerCommander: document.getElementById('signerCommanderEnd').value,
-                signerOrder: document.getElementById('signerOrderEnd').value
-            }
+            ketThuc: {
+                nguoiGiamSat: document.getElementById('nguoiGiamSat').value,
+                thoiGianKetThuc: document.getElementById('thoiGianKetThuc').value,
+                baoCaoCho: document.getElementById('baoCaoCho').value,
+                kyChiHuy: document.getElementById('kyNguoiChiHuyCuoi').value,
+                kyRaLenh: document.getElementById('kyNguoiRaLenhCuoi').value,
+                trinhTu: Array.from(document.querySelectorAll('#tableTrinhTu tbody tr')).map(row => ({
+                    congViec: row.querySelector('.seq-work').value,
+                    anToan: row.querySelector('.seq-safe').value
+                }))
+            },
+            lastUpdated: new Date().toISOString()
         };
 
-        // Lưu lên Firebase: lenh_cong_tac/[so_lenh]
-        db.ref('lenh_cong_tac/' + orderNum).set(data)
-            .then(() => alert("Đã lưu thành công lệnh số: " + orderNum))
-            .catch(err => alert("Lỗi lưu dữ liệu: " + err.message));
+        // Gửi lên Firebase: Sử dụng Số lệnh làm ID
+        db.ref('LenhCongTac/' + soLenh).set(data)
+            .then(() => {
+                document.getElementById('statusMsg').innerText = "Đã lưu lúc " + new Date().toLocaleTimeString();
+                alert("Lưu thành công lệnh số: " + soLenh);
+            })
+            .catch((error) => {
+                alert("Lỗi: " + error.message);
+                document.getElementById('statusMsg').innerText = "Lỗi khi lưu";
+            });
     }
 
-    // --- HÀM TẢI DỮ LIỆU ---
+    // --- 3. HÀM TẢI DỮ LIỆU ---
     function loadData() {
-        const key = document.getElementById('searchKey').value.trim();
-        if(!key) { alert("Nhập số lệnh cần tìm!"); return; }
+        const soLenh = prompt("Nhập SỐ LỆNH muốn xem lại:");
+        if (!soLenh) return;
 
-        db.ref('lenh_cong_tac/' + key).once('value').then(snapshot => {
-            const val = snapshot.val();
-            if(!val) { alert("Không tìm thấy lệnh số: " + key); return; }
-            
-            // Fill dữ liệu
-            document.getElementById('unitName').value = val.meta.unit || '';
-            document.getElementById('orderNumber').value = val.meta.id || '';
+        document.getElementById('statusMsg').innerText = "Đang tải...";
+        
+        db.ref('LenhCongTac/' + soLenh).once('value').then((snapshot) => {
+            const data = snapshot.val();
+            if (!data) {
+                alert("Không tìm thấy dữ liệu cho lệnh số: " + soLenh);
+                document.getElementById('statusMsg').innerText = "Không tìm thấy";
+                return;
+            }
+
+            // Điền lại dữ liệu vào form
+            document.getElementById('soLenh').value = soLenh;
+            document.getElementById('donViCapLenh').value = data.donViCapLenh || "";
             
             // Phần A
-            if(val.sectionA) {
-                document.getElementById('commanderA').value = val.sectionA.commander || '';
-                document.getElementById('safetyLevelA').value = val.sectionA.safetyLevel || '';
-                document.getElementById('staffCountA').value = val.sectionA.staffCount || '';
-                document.getElementById('staffUnitA').value = val.sectionA.staffUnit || '';
-                document.getElementById('locationA').value = val.sectionA.location || '';
-                document.getElementById('contentA').value = val.sectionA.content || '';
-                document.getElementById('safetyCondA').value = val.sectionA.safetyCond || '';
-                document.getElementById('startTimeA').value = val.sectionA.startTime || '';
-                document.getElementById('signerA').value = val.sectionA.signer || '';
-
-                // Fill bảng nhân viên
-                if(val.sectionA.staffList) {
-                    const rows = document.querySelectorAll('#tableStaffA tbody tr');
-                    val.sectionA.staffList.forEach((staff, idx) => {
-                        if(rows[idx]) {
-                            const inputs = rows[idx].querySelectorAll('input');
-                            inputs[0].value = staff.name;
-                            inputs[1].value = staff.safety;
+            if (data.phanA) {
+                document.getElementById('nguoiChiHuyA').value = data.phanA.nguoiChiHuy || "";
+                document.getElementById('bacAtA').value = data.phanA.bacAt || "";
+                document.getElementById('soLuongNguoiA').value = data.phanA.soLuong || "";
+                document.getElementById('donViCongTacA').value = data.phanA.donVi || "";
+                document.getElementById('diaDiemA').value = data.phanA.diaDiem || "";
+                document.getElementById('noiDungA').value = data.phanA.noiDung || "";
+                document.getElementById('dieuKienA').value = data.phanA.dieuKien || "";
+                document.getElementById('thoiGianBatDauA').value = data.phanA.thoiGianBatDau || "";
+                document.getElementById('kyNguoiRaLenhA').value = data.phanA.nguoiKy || "";
+                
+                // Điền bảng nhân viên A
+                if(data.phanA.nhanVien) {
+                    const rows = document.querySelectorAll('#tableNhanVienA tbody tr');
+                    data.phanA.nhanVien.forEach((nv, index) => {
+                        if(rows[index]) {
+                            rows[index].querySelector('.staff-name').value = nv.ten || "";
+                            rows[index].querySelector('.staff-safety').value = nv.bac || "";
                         }
                     });
                 }
             }
 
-            // Phần B
-            if(val.sectionB) {
-                document.getElementById('startTimeB').value = val.sectionB.startTimeReal || '';
-                document.getElementById('supervisor').value = val.sectionB.supervisor || '';
-                document.getElementById('supervisorUnit').value = val.sectionB.supervisorUnit || '';
-                document.getElementById('endTime').value = val.sectionB.endTime || '';
-                document.getElementById('reportedPerson').value = val.sectionB.reportedPerson || '';
-                document.getElementById('signerCommanderEnd').value = val.sectionB.signerCommander || '';
-                document.getElementById('signerOrderEnd').value = val.sectionB.signerOrder || '';
+            // Phần B & Kết thúc
+            if (data.phanB) {
+                document.getElementById('thoiGianBatDauB').value = data.phanB.thoiGianThucTe || "";
+                // Điền bảng B tương tự (code rút gọn cho ngắn)...
+                if(data.phanB.nhanVienChiTiet) {
+                     const rows = document.querySelectorAll('#tableNhanVienB tbody tr');
+                     data.phanB.nhanVienChiTiet.forEach((nv, index) => {
+                        if(rows[index]) {
+                            rows[index].querySelector('.b-name').value = nv.ten || "";
+                            rows[index].querySelector('.b-safety').value = nv.bac || "";
+                            rows[index].querySelector('.b-arr-time').value = nv.den || "";
+                            rows[index].querySelector('.b-dep-time').value = nv.di || "";
+                        }
+                     });
+                }
             }
-            alert("Đã tải dữ liệu!");
-        });
-    }
+            if (data.ketThuc) {
+                document.getElementById('nguoiGiamSat').value = data.ketThuc.nguoiGiamSat || "";
+                document.getElementById('thoiGianKetThuc').value = data.ketThuc.thoiGianKetThuc || "";
+                document.getElementById('baoCaoCho').value = data.ketThuc.baoCaoCho || "";
+                document.getElementById('kyNguoiChiHuyCuoi').value = data.ketThuc.kyChiHuy || "";
+                document.getElementById('kyNguoiRaLenhCuoi').value = data.ketThuc.kyRaLenh || "";
+                
+                 if(data.ketThuc.trinhTu) {
+                     const rows = document.querySelectorAll('#tableTrinhTu tbody tr');
+                     data.ketThuc.trinhTu.forEach((tt, index) => {
+                        if(rows[index]) {
+                            rows[index].querySelector('.seq-work').value = tt.congViec || "";
+                            rows[index].querySelector('.seq-safe').value = tt.anToan || "";
+                        }
+                     });
+                }
+            }
 
-    function resetForm() {
-        if(confirm("Bạn có chắc muốn xóa trắng form để nhập mới?")) {
-            document.querySelectorAll('input, textarea').forEach(e => e.value = '');
-        }
+            document.getElementById('statusMsg').innerText = "Đã tải xong!";
+            alert("Đã tải dữ liệu lệnh số " + soLenh);
+        });
     }
 </script>
 
